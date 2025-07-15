@@ -30,8 +30,7 @@ jobs:
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: |
           🦎 Build Dimulai
-
-          📱 Device : ${{ env.KERNEL_CONFIG }}
+          
           📅 Date : ${{ steps.date.outputs.date }}
           🕐 Time : ${{ steps.date.outputs.time }}
           🚀 Builder : Lilium Kernel CI
