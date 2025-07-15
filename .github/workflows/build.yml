@@ -8,10 +8,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout Repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: ⚙️ Load config.env to Environment
+      - name: Load config.env to Environment
         run: |
           while IFS='=' read -r key value; do
             if [[ ! "$key" =~ ^# && "$key" != "" ]]; then
@@ -19,13 +19,13 @@ jobs:
             fi
           done < config.env
 
-      - name: 🕐 Get Date & Time (WIB)
+      - name: Get Date & Time (WIB)
         id: date
         run: |
           echo "date=$(TZ='Asia/Jakarta' date +'%Y%m%d')" >> $GITHUB_OUTPUT
           echo "time=$(TZ='Asia/Jakarta' date +'%H:%M:%S WIB')" >> $GITHUB_OUTPUT
 
-      - name: 🚀 Notify Telegram (Triggered)
+      - name: Notify Telegram (Triggered)
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -33,32 +33,32 @@ jobs:
           message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
           parse_mode: MarkdownV2
           message: |
-            🎈 Build Kernel Triggered By: ${{ github.actor }}
+            🎈 Build Triggered by: ${{ github.actor }}
 
             📱 Device: ${{ env.DEVICE_CODENAME }}
-            📅 Date Build: ${{ steps.date.outputs.date }}
-            🕐 Jam Build: ${{ steps.date.outputs.time }}
-            🦎 Build Variant: ${{ env.BUILD_VARIANT }}
+            📅 Date: ${{ steps.date.outputs.date }}
+            🕐 Time: ${{ steps.date.outputs.time }}
+            🦎 Variant: ${{ env.BUILD_VARIANT }}
 
-      - name: 🛠️ Setup Build Dependencies
+      - name: Setup Build Dependencies
         run: |
           sudo apt update
           sudo apt install -y bc bison flex libssl-dev libncurses-dev curl git zip
 
-      - name: 🔓 Make build.sh Executable
+      - name: Make build.sh Executable
         run: chmod +x build.sh
 
-      - name: 🧪 Run Kernel Builder
+      - name: Run Kernel Builder
         run: ./build.sh
 
-      - name: 📦 Upload Flashable ZIP
+      - name: Upload Flashable ZIP
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: Flashable-Kernel
           path: AnyKernel3/*.zip
 
-      - name: ✅ Notify Telegram (Success)
+      - name: Notify Telegram (Success)
         if: success()
         uses: appleboy/telegram-action@master
         with:
@@ -67,18 +67,18 @@ jobs:
           message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
           parse_mode: MarkdownV2
           message: |
-            ✅ Build Status: Success
+            ✅ Build Success
 
             📱 Device: ${{ env.DEVICE_CODENAME }}
-            📅 Date Build: ${{ steps.date.outputs.date }}
-            🕐 Jam Build: ${{ steps.date.outputs.time }}
-            🦎 Build Variant: ${{ env.BUILD_VARIANT }}
+            📅 Date: ${{ steps.date.outputs.date }}
+            🕐 Time: ${{ steps.date.outputs.time }}
+            🦎 Variant: ${{ env.BUILD_VARIANT }}
 
             📦 ZIP uploaded to Artifacts
             🔗 Repo: ${{ github.repository }}
             👤 Built by: ${{ github.actor }}
 
-      - name: 💀 Notify Telegram (Failed)
+      - name: Notify Telegram (Failed)
         if: failure()
         uses: appleboy/telegram-action@master
         with:
@@ -87,13 +87,13 @@ jobs:
           message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
           parse_mode: MarkdownV2
           message: |
-            💀 Build Status: Failed
+            💀 Build Failed
 
             📱 Device: ${{ env.DEVICE_CODENAME }}
-            📅 Date Build: ${{ steps.date.outputs.date }}
-            🕐 Jam Build: ${{ steps.date.outputs.time }}
-            🦎 Build Variant: ${{ env.BUILD_VARIANT }}
+            📅 Date: ${{ steps.date.outputs.date }}
+            🕐 Time: ${{ steps.date.outputs.time }}
+            🦎 Variant: ${{ env.BUILD_VARIANT }}
 
-            🧾 Error Log: Check Actions tab
+            🧾 Check Actions tab for logs
             🔗 Commit: ${{ github.sha }}
             👤 Built by: ${{ github.actor }}
