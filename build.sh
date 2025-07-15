@@ -28,7 +28,7 @@ echo "🔧 Starting Kernel Build for: $KERNEL_CONFIG"
 make O=../out ARCH=$ARCH $KERNEL_CONFIG
 
 # ===== Compilation =====
-make -j$(nproc) O=../out ARCH=$ARCH $BUILD_ARGS
+make -j$(nproc) O=../out ARCH=$ARCH CC=clang CROSS_COMPILE=$CROSS_COMPILE CROSS_COMPILE_ARM32=$CROSS_COMPILE_ARM32
 
 # ===== Output Check & Packing =====
 if [ -f "../out/arch/arm64/boot/$OUTPUT_IMAGE_NAME" ]; then
