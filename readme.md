@@ -56,7 +56,3 @@ Developed by dragonzordsCompiler: The Raging Beast ClangZIP Packing: AnyKernel3T
 
 “Build kernel bukan cuma compile—tapi soal flow, gaya, dan CI yang bisa ngomong ke Telegram.”
 
-
----
-
-📌 Udah siap commit langsung ke `README.md` repo lo. Mau gue bantu bikin banner PNG buat header atau QR ZIP release buat repo showcase? Gue standby kayak TRB Clang yang udah preload rage mode di folder `bin/` 🚀📲💻🔥🧠🦅
