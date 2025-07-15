@@ -1,20 +1,23 @@
 name: Kernel Build CI
 
 on:
-  workflow_dispatch:  # ❌ Auto-push trigger dihapus, aman dari build mendadak
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      KERNEL_CONFIG: begonia_user_defconfig
-      LOCALVERSION: axira-begonia
-      MESSAGE_THREAD_ID: 177894  # ✅ ID topik Telegram
-
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
+
+    - name: Load config.env to GITHUB_ENV
+      run: |
+        while IFS='=' read -r key value; do
+          if [[ ! "$key" =~ ^# && "$key" != "" ]]; then
+            echo "$key=$value" >> $GITHUB_ENV
+          fi
+        done < config.env
 
     - name: Get Date & Time
       id: date
@@ -27,13 +30,16 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message_thread_id: ${{ env.MESSAGE_THREAD_ID }}
+        message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
+        parse_mode: MarkdownV2
         message: |
-          🦎 Build Dimulai  
-          ⌛ Estimated Time : ±7–15 mins  
-          📅 Date : ${{ steps.date.outputs.date }}  
-          🕐 Time : ${{ steps.date.outputs.time }}  
-          🚀 Builder : Lilium Kernel CI
+          *🦎 Build Kernel Triggered* 
+          
+          📱 *Device* : `${{ env.DEVICE_CODENAME }}`  
+          ⌛ *Estimated Time* : ±7–15 mins  
+          📅 *Date* : ${{ steps.date.outputs.date }}  
+          🕐 *Time* : ${{ steps.date.outputs.time }}  
+          🚀 *Compiler* : Proton Clang
 
     - name: Setup Build Environment
       run: |
@@ -59,12 +65,15 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message_thread_id: ${{ env.MESSAGE_THREAD_ID }}
+        message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
+        parse_mode: MarkdownV2
         message: |
-          ✅ Build Success!  
-          📦 Output : ZIP uploaded to Artifacts  
-          🔗 Repo : ${{ github.repository }}  
-          👤 Built by : ${{ github.actor }}
+          *✅ Build Success!* 
+          
+          📱 *Device* : `${{ env.DEVICE_CODENAME }}`  
+          📦 *Output* : ZIP uploaded to Artifacts  
+          🔗 *Repo* : `${{ github.repository }}`  
+          👤 *Built by* : `${{ github.actor }}`
 
     - name: Send Telegram Notification (Failed)
       if: failure()
@@ -72,9 +81,12 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
-        message_thread_id: ${{ env.MESSAGE_THREAD_ID }}
+        message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
+        parse_mode: MarkdownV2
         message: |
-          ❌ Build Gagal!  
-          🧾 Error Log : Check Actions tab  
-          🔗 Commit : ${{ github.sha }}  
-          👤 Built by : ${{ github.actor }}
+          *❌ Build Gagal!* 
+          
+          📱 *Device* : `${{ env.DEVICE_CODENAME }}`  
+          🧾 *Error Log* : Check Actions tab  
+          🔗 *Commit* : `${{ github.sha }}`  
+          👤 *Built by* : `${{ github.actor }}`
