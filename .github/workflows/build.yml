@@ -1,17 +1,16 @@
 name: Kernel Build CI
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+  workflow_dispatch:  # ❌ Auto-push trigger dihapus, aman dari build mendadak
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     env:
       KERNEL_CONFIG: begonia_user_defconfig
       LOCALVERSION: axira-begonia
+      MESSAGE_THREAD_ID: 177894  # ✅ ID topik Telegram
 
     steps:
     - name: Checkout Repo
@@ -28,11 +27,12 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
+        message_thread_id: ${{ env.MESSAGE_THREAD_ID }}
         message: |
-          🦎 Build Dimulai
-          
-          📅 Date : ${{ steps.date.outputs.date }}
-          🕐 Time : ${{ steps.date.outputs.time }}
+          🦎 Build Dimulai  
+          ⌛ Estimated Time : ±7–15 mins  
+          📅 Date : ${{ steps.date.outputs.date }}  
+          🕐 Time : ${{ steps.date.outputs.time }}  
           🚀 Builder : Lilium Kernel CI
 
     - name: Setup Build Environment
@@ -59,12 +59,11 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
+        message_thread_id: ${{ env.MESSAGE_THREAD_ID }}
         message: |
-          ✅ Build Success!
-
-          📱 Device : ${{ env.KERNEL_CONFIG }}
-          📦 Output : ZIP uploaded to Artifacts
-          🔗 Repo : ${{ github.repository }}
+          ✅ Build Success!  
+          📦 Output : ZIP uploaded to Artifacts  
+          🔗 Repo : ${{ github.repository }}  
           👤 Built by : ${{ github.actor }}
 
     - name: Send Telegram Notification (Failed)
@@ -73,10 +72,9 @@ jobs:
       with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
+        message_thread_id: ${{ env.MESSAGE_THREAD_ID }}
         message: |
-          ❌ Build Gagal!
-
-          📱 Device : ${{ env.KERNEL_CONFIG }}
-          🧾 Error Log : Check Actions tab
-          🔗 Commit : ${{ github.sha }}
+          ❌ Build Gagal!  
+          🧾 Error Log : Check Actions tab  
+          🔗 Commit : ${{ github.sha }}  
           👤 Built by : ${{ github.actor }}
