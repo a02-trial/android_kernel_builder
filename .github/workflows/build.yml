@@ -33,12 +33,12 @@ jobs:
           message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
           parse_mode: MarkdownV2
           message: |
-            *🎈 Build Kernel Triggered By `${{ github.actor }}`*
+            🎈 Build Kernel Triggered By: ${{ github.actor }}
 
-            *📱 Device* : `${{ env.DEVICE_CODENAME }}`
-            *📅 Date Build* : `${{ steps.date.outputs.date }}`
-            *🕐 Jam Build* : `${{ steps.date.outputs.time }}`
-            *🦎 Build Variant* : `${{ env.BUILD_VARIANT }}`
+            📱 Device: ${{ env.DEVICE_CODENAME }}
+            📅 Date Build: ${{ steps.date.outputs.date }}
+            🕐 Jam Build: ${{ steps.date.outputs.time }}
+            🦎 Build Variant: ${{ env.BUILD_VARIANT }}
 
       - name: 🛠️ Setup Build Dependencies
         run: |
@@ -67,16 +67,16 @@ jobs:
           message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
           parse_mode: MarkdownV2
           message: |
-            *✅ Build Berhasil!*
+            ✅ Build Status: Success
 
-            *📱 Device* : `${{ env.DEVICE_CODENAME }}`
-            *📅 Date Build* : `${{ steps.date.outputs.date }}`
-            *🕐 Jam Build* : `${{ steps.date.outputs.time }}`
-            *🦎 Build Variant* : `${{ env.BUILD_VARIANT }}`
+            📱 Device: ${{ env.DEVICE_CODENAME }}
+            📅 Date Build: ${{ steps.date.outputs.date }}
+            🕐 Jam Build: ${{ steps.date.outputs.time }}
+            🦎 Build Variant: ${{ env.BUILD_VARIANT }}
 
-            📦 ZIP uploaded to Artifacts  
-            🔗 Repo : `${{ github.repository }}`  
-            👤 Built by : `${{ github.actor }}`
+            📦 ZIP uploaded to Artifacts
+            🔗 Repo: ${{ github.repository }}
+            👤 Built by: ${{ github.actor }}
 
       - name: 💀 Notify Telegram (Failed)
         if: failure()
@@ -87,13 +87,13 @@ jobs:
           message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
           parse_mode: MarkdownV2
           message: |
-            *💀 Build Gagal!*
+            💀 Build Status: Failed
 
-            *📱 Device* : `${{ env.DEVICE_CODENAME }}`
-            *📅 Date Build* : `${{ steps.date.outputs.date }}`
-            *🕐 Jam Build* : `${{ steps.date.outputs.time }}`
-            *🦎 Build Variant* : `${{ env.BUILD_VARIANT }}`
+            📱 Device: ${{ env.DEVICE_CODENAME }}
+            📅 Date Build: ${{ steps.date.outputs.date }}
+            🕐 Jam Build: ${{ steps.date.outputs.time }}
+            🦎 Build Variant: ${{ env.BUILD_VARIANT }}
 
-            🧾 Error Log : Check Actions tab  
-            🔗 Commit : `${{ github.sha }}`  
-            👤 Built by : `${{ github.actor }}`
+            🧾 Error Log: Check Actions tab
+            🔗 Commit: ${{ github.sha }}
+            👤 Built by: ${{ github.actor }}
