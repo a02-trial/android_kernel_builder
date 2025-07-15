@@ -1,100 +1,137 @@
-Lilium Kernel Builder
 
 `markdown
-
-⚡ Lilium Kernel Builder
-
-Automated GitHub Actions CI builder for Android custom kernels.  
-Built for speed, modularity, and root-level stealth via SukiSU Ultra.  
-Includes Telegram integration, artifact upload, and flashable ZIP packing via AnyKernel3.
-
----
-
-📦 Features
-
-- 🧠 Modular build script via config.env
-- 🔧 Supports Lilium Clang and custom toolchains
-- ⚙️ Auto-inject SukiSU Ultra modules & manager APK
-- 🕵️‍♂️ Switchable via flags: SUKISUULTRA, SUSFSMODULE, KSUMANAGERAPK
-- 📲 Telegram notification: start, success, failed
-- 📝 Auto ZIP naming: localversion-jenis-codename-tanggal.zip
-- 🌐 Optional kernel source auto-clone
-- 💥 Artifact auto-upload for easy download
-- 🔁 Ready for multi-device integration
+<h1 align="center">⚙️ Android Kernel CI Builder</h1>
+<p align="center">
+  <strong>Modular kernel build system powered by TRB Clang & GitHub Actions</strong><br>
+  <em>Fleksibel, rapi, dan siap dipakai langsung—bahkan tanpa PC!</em>
+</p>
 
 ---
 
-🚀 Usage Guide
+!CI Status
+!TRB Clang
+!Kernel Variant
+!Telegram Notifier
 
-🔨 1. Clone Repo
+---
+
+🚀 Fitur Unggulan
+
+- 🔧 Builder otomatis pakai config.env  
+- ⚡️ Kompatibel dengan TRB Clang & LLVM optimisasi  
+- 💬 Notifikasi Telegram stylish pake MarkdownV2  
+- 📦 ZIP flashable via AnyKernel3  
+- 📲 Bisa dijalankan langsung dari HP via GitHub Web/App  
+- 🔒 Aman: semua token & Thread ID via Secrets  
+
+---
+
+📝 Cara Pakai Builder
+
+1️⃣ Fork atau Clone Repo Ini
+Lalu buka tab Actions di GitHub dan pilih workflow Kernel Build CI.
+
+---
+
+2️⃣ Edit File config.env
+Isi bagian penting seperti ini:
+
 `bash
-git clone https://github.com/username/lilium-kernel-builder.git
-cd lilium-kernel-builder
-`
+DEVICE_CODENAME=begonia                 # ← codename device
+BUILD_VARIANT=Regular                   # ← flavor build (Regular / KSU-Next / Magisk)
+KERNELCONFIG=vendor/begoniauser_defconfig
+LOCALVERSION=axira-begonia
 
-🔧 2. Edit config.env
-Set these values:
-`bash
-KERNELSOURCE=https://github.com/user/devicekernel_source
-KERNELSOURCEBRANCH=main
-KERNELCONFIG=vendor/devicedefconfig
-LOCALVERSION=lilium-rengoku
-
-CLANGDIR=toolchain/liliumclang-xxxxxx
-CROSS_COMPILE=aarch64-linux-gnu-
+CLANGDIR=toolchain/trbclang          # ← folder hasil clone TRB Clang
+CROSS_COMPILE=aarch64-linux-android-
 CROSSCOMPILEARM32=arm-linux-androideabi-
-
-SUKISU_ULTRA=true      # Enable root module injection
-PACK_KERNEL=true       # Enable flashable ZIP packing
+BUILDARGS=CC=clang LD=ld.lld LLVM=1 LLVMIAS=1
+OUTPUTIMAGENAME=Image.gz-dtb
+PACK_KERNEL=true
+ANYKERNEL_SOURCE=https://github.com/yourusername/AnyKernel3
+ANYKERNELSOURCEBRANCH=main
+ANYKERNEL_DIR=AnyKernel3
+SUKISU_ULTRA=false
 `
 
-📲 3. Setup Telegram Bot
-- Create bot via @BotFather
-- Get TELEGRAMTOKEN and TELEGRAMCHAT_ID
-- Add them as Secrets in GitHub repo:
-  - Settings > Secrets > Actions
+🧠 Sudah tersedia versi template dengan petunjuk di dalamnya.
 
 ---
 
-✨ Output Format
-
-Flashable ZIP will appear in GitHub Actions > Artifacts  
-Named as:
-`
-localversion-[reguler/sukisu]-codename-yyyyMMdd.zip
-`
-
-Example:
-`
-lilium-rengoku-sukisu-violet-20250715.zip
+3️⃣ Clone TRB Clang
+Toolchain wajib buat compile kernel:
+`bash
+git clone --depth=1 https://gitlab.com/TheRagingBeast/clang.git toolchain/trb_clang
 `
 
 ---
 
-📲 Telegram Notifications
+4️⃣ Tambahkan GitHub Secrets
+Masuk ke Settings → Secrets → Actions, tambahkan:
 
-Receive build status updates instantly:
-- 🔔 Build Triggered
-- ✅ Build Success
-- ❌ Build Failed
-
-Includes:
-- Device Defconfig  
-- Time & Date  
-- Link to Artifact (via GitHub)
+| Secret Name           | Keterangan                            |
+|-----------------------|----------------------------------------|
+| TELEGRAM_TOKEN      | Bot token Telegram                     |
+| TELEGRAMCHATID    | ID chat grup/channel Telegram          |
+| MESSAGETHREADID   | ID thread topik Telegram (optional)    |
 
 ---
 
-👑 Credits
-
-- Kernel Build Script Base: zclkkk/kernelbuild
-- Clang: Compile with Power
-- SukiSU Ultra: SukiSU-Ultra
-- Telegram CI Action: appleboy/telegram-action
+5️⃣ Trigger Build
+Masuk ke tab Actions, pilih workflow Kernel Build CI, klik Run workflow.
 
 ---
 
-> “Lilium Kernel Builder bukan sekadar CI—ini compiler rasa digital yang bisa ngomong ke Telegram dan nge-root langsung ke boot partition.”
+🔔 Format Notifikasi Telegram
+
+Contoh notifikasi rapi bold di Telegram:
+`
+🎈 Build Kernel Triggered By github_actor
+
+📱 Device : begonia  
+📅 Date Build : 20250715  
+🕐 Jam Build : 13:25:01 WIB  
+🦎 Build Variant : Regular
+`
+
+> 📦 Build sukses akan upload ZIP ke tab Artifacts
+
+---
+
+📁 Struktur Proyek
+
+| File/Folder            | Fungsi                                      |
+|------------------------|---------------------------------------------|
+| .github/workflows/   | Workflow CI YAML                            |
+| config.env           | Konfigurasi build & device                  |
+| build.sh             | Script compile kernel dan packing ZIP       |
+| AnyKernel3/          | Tempat file output ZIP dikemas              |
+| toolchain/trb_clang  | Folder hasil clone TRB Clang                |
+
+---
+
+📌 Catatan Tambahan
+
+- Build berjalan di GitHub Action, gak butuh VPS atau PC  
+- Bisa build lewat HP (edit config.env, trigger via GitHub)  
+- Semua script sudah modular—tinggal isi dan jalan  
+- Output format ZIP: begonia-Regular-Kernel.zip
+
+---
+
+👤 Kredit
+
+Developed by [yourusername]  
+Compiler: The Raging Beast Clang  
+Packing ZIP by AnyKernel3  
+Notifikasi bot via appleboy/telegram-action
+
+> "Build kernel bukan cuma soal compile—tapi soal flow, estetika, dan gaya digital developer masa kini."
+
+---
 `
 
 ---
+
+💡 Jangan lupa ganti yourusername dan nama repo/badge sesuai dengan repo lo.  
+Mau gue bantu tambahin banner gambar, QR scan ZIP, atau changelog parser di workflow? Gue standby kayak AnyKernel script yang udah siap zip -r9 🔥📲💻🧠🦅
