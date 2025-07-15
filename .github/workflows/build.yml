@@ -31,25 +31,25 @@ jobs:
         message: |
           #KernelBuildTriggered
 
-          📱Device : ${{ env.KERNEL_CONFIG }}
-          📅 Date Build : ${{ steps.date.outputs.date }}
-          🕐 Time Build : ${{ steps.date.outputs.time }}
-          ⌛ Estimated Time : ±5-10 minutes
+          📱 Device : ${{ env.KERNEL_CONFIG }}
+          📅 Date : ${{ steps.date.outputs.date }}
+          🕐 Time : ${{ steps.date.outputs.time }}
+          🚀 Builder : Lilium Kernel CI
 
     - name: Setup Build Environment
       run: |
         sudo apt update
         sudo apt install -y bc bison flex libssl-dev libncurses-dev curl git zip
 
-    - name: Set build.sh as executable
+    - name: Set build.sh as Executable
       run: chmod +x build.sh
 
     - name: Run Kernel Builder
       run: ./build.sh
 
-    - name: Upload Kernel Output
+    - name: Upload Flashable Kernel ZIP
       if: success()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Flashable-Kernel
         path: AnyKernel3/*.zip
@@ -63,10 +63,10 @@ jobs:
         message: |
           ✅ Build Success!
 
-          📱Device : ${{ env.KERNEL_CONFIG }}
-          📦 Output : Flashable ZIP uploaded to Artifacts
+          📱 Device : ${{ env.KERNEL_CONFIG }}
+          📦 Output : ZIP uploaded to Artifacts
           🔗 Repo : ${{ github.repository }}
-          👤 By : ${{ github.actor }}
+          👤 Built by : ${{ github.actor }}
 
     - name: Send Telegram Notification (Failed)
       if: failure()
@@ -77,7 +77,7 @@ jobs:
         message: |
           ❌ Build Failed!
 
-          📱Device : ${{ env.KERNEL_CONFIG }}
+          📱 Device : ${{ env.KERNEL_CONFIG }}
           🧾 Error Log : Check Actions tab
           🔗 Commit : ${{ github.sha }}
-          👤 By : ${{ github.actor }}
+          👤 Built by : ${{ github.actor }}
