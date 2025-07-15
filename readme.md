@@ -83,7 +83,7 @@ ID topik thread Telegram (opsional)
 
 5️⃣ Trigger Build
 
-Masuk ke tab Actions, pilih workflow Kernel Build CI, klik Run workflow.
+Masuk ke tab Actions, pilih workflow Kernel Build CI, lalu klik Run workflow.
 
 🔔 Format Notifikasi Telegram
 
