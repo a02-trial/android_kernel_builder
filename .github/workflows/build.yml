@@ -1,0 +1,83 @@
+name: Kernel Build CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      KERNEL_CONFIG: vendor/device_defconfig
+      LOCALVERSION: lilium-rengoku
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+
+    - name: Get Date & Time
+      id: date
+      run: |
+        echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+        echo "time=$(date +'%H:%M:%S')" >> $GITHUB_OUTPUT
+
+    - name: Send Telegram Notification (Build Triggered)
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          #KernelBuildTriggered
+
+          📱Device : ${{ env.KERNEL_CONFIG }}
+          📅 Date Build : ${{ steps.date.outputs.date }}
+          🕐 Time Build : ${{ steps.date.outputs.time }}
+          ⌛ Estimated Time : ±5-10 minutes
+
+    - name: Setup Build Environment
+      run: |
+        sudo apt update
+        sudo apt install -y bc bison flex libssl-dev libncurses-dev curl git zip
+
+    - name: Set build.sh as executable
+      run: chmod +x build.sh
+
+    - name: Run Kernel Builder
+      run: ./build.sh
+
+    - name: Upload Kernel Output
+      if: success()
+      uses: actions/upload-artifact@v3
+      with:
+        name: Flashable-Kernel
+        path: AnyKernel3/*.zip
+
+    - name: Send Telegram Notification (Success)
+      if: success()
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          ✅ Build Success!
+
+          📱Device : ${{ env.KERNEL_CONFIG }}
+          📦 Output : Flashable ZIP uploaded to Artifacts
+          🔗 Repo : ${{ github.repository }}
+          👤 By : ${{ github.actor }}
+
+    - name: Send Telegram Notification (Failed)
+      if: failure()
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_CHAT_ID }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          ❌ Build Failed!
+
+          📱Device : ${{ env.KERNEL_CONFIG }}
+          🧾 Error Log : Check Actions tab
+          🔗 Commit : ${{ github.sha }}
+          👤 By : ${{ github.actor }}
