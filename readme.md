@@ -1,5 +1,4 @@
 
-`markdown
 <h1 align="center">⚙️ Android Kernel CI Builder</h1>
 <p align="center">
   <strong>Modular kernel build system powered by TRB Clang & GitHub Actions</strong><br>
