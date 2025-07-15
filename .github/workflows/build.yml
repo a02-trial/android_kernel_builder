@@ -10,8 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      KERNEL_CONFIG: vendor/device_defconfig
-      LOCALVERSION: lilium-rengoku
+      KERNEL_CONFIG: begonia_user_defconfig
+      LOCALVERSION: axira-begonia
 
     steps:
     - name: Checkout Repo
@@ -29,7 +29,7 @@ jobs:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: |
-          #KernelBuildTriggered
+          🦎 Build Dimulai
 
           📱 Device : ${{ env.KERNEL_CONFIG }}
           📅 Date : ${{ steps.date.outputs.date }}
@@ -75,7 +75,7 @@ jobs:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: |
-          ❌ Build Failed!
+          ❌ Build Gagal!
 
           📱 Device : ${{ env.KERNEL_CONFIG }}
           🧾 Error Log : Check Actions tab
