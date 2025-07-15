@@ -19,13 +19,13 @@ jobs:
           fi
         done < config.env
 
-    - name: Get Date & Time
+    - name: Get Date & Time (WIB)
       id: date
       run: |
-        echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
-        echo "time=$(date +'%H:%M:%S')" >> $GITHUB_OUTPUT
+        echo "date=$(TZ='Asia/Jakarta' date +'%Y%m%d')" >> $GITHUB_OUTPUT
+        echo "time=$(TZ='Asia/Jakarta' date +'%H:%M:%S WIB')" >> $GITHUB_OUTPUT
 
-    - name: Send Telegram Notification (Build Triggered)
+    - name: Send Telegram Notification (Triggered)
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -33,13 +33,12 @@ jobs:
         message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
         parse_mode: MarkdownV2
         message: |
-          *🦎 Build Kernel Triggered* 
-          
-          📱 *Device* : `${{ env.DEVICE_CODENAME }}`  
-          ⌛ *Estimated Time* : ±7–15 mins  
-          📅 *Date* : ${{ steps.date.outputs.date }}  
-          🕐 *Time* : ${{ steps.date.outputs.time }}  
-          🚀 *Compiler* : Proton Clang
+          *🎈 Build Kernel Triggered By `${{ github.actor }}`*
+
+          *📱 Device* : `${{ env.DEVICE_CODENAME }}`
+          *📅 Date Build* : `${{ steps.date.outputs.date }}`
+          *🕐 Jam Build* : `${{ steps.date.outputs.time }}`
+          *🦎 Build Variant* : `${{ env.BUILD_VARIANT }}`
 
     - name: Setup Build Environment
       run: |
@@ -68,12 +67,16 @@ jobs:
         message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
         parse_mode: MarkdownV2
         message: |
-          *✅ Build Success!* 
-          
-          📱 *Device* : `${{ env.DEVICE_CODENAME }}`  
-          📦 *Output* : ZIP uploaded to Artifacts  
-          🔗 *Repo* : `${{ github.repository }}`  
-          👤 *Built by* : `${{ github.actor }}`
+          *✅ Build Berhasil!*
+
+          *📱 Device* : `${{ env.DEVICE_CODENAME }}`
+          *📅 Date Build* : `${{ steps.date.outputs.date }}`
+          *🕐 Jam Build* : `${{ steps.date.outputs.time }}`
+          *🦎 Build Variant* : `${{ env.BUILD_VARIANT }}`
+
+          📦 ZIP uploaded to Artifacts  
+          🔗 Repo : `${{ github.repository }}`  
+          👤 Built by : `${{ github.actor }}`
 
     - name: Send Telegram Notification (Failed)
       if: failure()
@@ -84,9 +87,13 @@ jobs:
         message_thread_id: ${{ secrets.MESSAGE_THREAD_ID }}
         parse_mode: MarkdownV2
         message: |
-          *❌ Build Gagal!* 
-          
-          📱 *Device* : `${{ env.DEVICE_CODENAME }}`  
-          🧾 *Error Log* : Check Actions tab  
-          🔗 *Commit* : `${{ github.sha }}`  
-          👤 *Built by* : `${{ github.actor }}`
+          *💀 Build Gagal!*
+
+          *📱 Device* : `${{ env.DEVICE_CODENAME }}`
+          *📅 Date Build* : `${{ steps.date.outputs.date }}`
+          *🕐 Jam Build* : `${{ steps.date.outputs.time }}`
+          *🦎 Build Variant* : `${{ env.BUILD_VARIANT }}`
+
+          🧾 Error Log : Check Actions tab  
+          🔗 Commit : `${{ github.sha }}`  
+          👤 Built by : `${{ github.actor }}`
