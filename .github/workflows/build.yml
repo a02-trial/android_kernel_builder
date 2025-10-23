@@ -26,7 +26,7 @@ jobs:
           echo "time=$(TZ='Asia/Jakarta' date +'%H:%M:%S WIB')" >> $GITHUB_OUTPUT
 
       - name: Notify Telegram (Triggered)
-        uses: appleboy/telegram-action@master
+        uses: cipin2302/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
@@ -60,7 +60,7 @@ jobs:
 
       - name: Notify Telegram (Success)
         if: success()
-        uses: appleboy/telegram-action@master
+        uses: cipin2302/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
@@ -80,7 +80,7 @@ jobs:
 
       - name: Notify Telegram (Failed)
         if: failure()
-        uses: appleboy/telegram-action@master
+        uses: cipin2302/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
