@@ -9,8 +9,8 @@ rm -rf out
 mkdir -p out
 
 # Export build environment
-export ARCH=arm64
-export SUBARCH=arm64
+export ARCH=arm
+export SUBARCH=armv7-a-neon
 export CLANG_PATH="$CLANG_DIR/bin"
 export PATH="$CLANG_PATH:$PATH"
 
