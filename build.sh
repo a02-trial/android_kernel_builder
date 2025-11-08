@@ -27,7 +27,7 @@ make -j$(nproc) O=out $KERNEL_CONFIG
 make -j$(nproc) O=out $BUILD_ARGS
 
 # Check output image
-IMAGE_PATH="out/arch/arm64/boot/${OUTPUT_IMAGE_NAME}"
+IMAGE_PATH="out/arch/arm/boot/${OUTPUT_IMAGE_NAME}"
 if [[ -f "$IMAGE_PATH" ]]; then
   echo "✅ Build finished: $OUTPUT_IMAGE_NAME found."
   cp "$IMAGE_PATH" "$ANYKERNEL_DIR/"
