@@ -23,7 +23,7 @@ clang --version || echo "❌ Clang not found"
 
 # Start compilation
 echo "🚀 Starting Kernel Build..."
-make -j$(nproc) O=out $KERNEL_CONFIG
+make -j$(nproc --all) O=out $KERNEL_CONFIG
 make -j$(nproc) O=out $BUILD_ARGS
 
 # Check output image
